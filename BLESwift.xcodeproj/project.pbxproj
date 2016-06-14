@@ -14,6 +14,7 @@
 		EAE8A2041D10A65D009A24B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAE8A2021D10A65D009A24B8 /* LaunchScreen.storyboard */; };
 		EAE8A20F1D10A65D009A24B8 /* BLESwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE8A20E1D10A65D009A24B8 /* BLESwiftTests.swift */; };
 		EAE8A21A1D10A65D009A24B8 /* BLESwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE8A2191D10A65D009A24B8 /* BLESwiftUITests.swift */; };
+		EAE8A2281D10B676009A24B8 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAE8A2271D10B676009A24B8 /* CoreBluetooth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		EAE8A2151D10A65D009A24B8 /* BLESwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BLESwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAE8A2191D10A65D009A24B8 /* BLESwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLESwiftUITests.swift; sourceTree = "<group>"; };
 		EAE8A21B1D10A65D009A24B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EAE8A2271D10B676009A24B8 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAE8A2281D10B676009A24B8 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +80,7 @@
 		EAE8A1ED1D10A65C009A24B8 = {
 			isa = PBXGroup;
 			children = (
+				EAE8A2271D10B676009A24B8 /* CoreBluetooth.framework */,
 				EAE8A1F81D10A65D009A24B8 /* BLESwift */,
 				EAE8A20D1D10A65D009A24B8 /* BLESwiftTests */,
 				EAE8A2181D10A65D009A24B8 /* BLESwiftUITests */,
@@ -193,6 +197,7 @@
 				TargetAttributes = {
 					EAE8A1F51D10A65C009A24B8 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 6YJMXB2FR4;
 					};
 					EAE8A2091D10A65D009A24B8 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -401,6 +406,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = BLESwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MTesting.BLESwift;
@@ -412,6 +418,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = BLESwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = MTesting.BLESwift;
