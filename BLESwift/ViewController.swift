@@ -17,6 +17,8 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     var readRSSITimer: NSTimer!
     var peripheral: CBPeripheral!
     
+    @IBOutlet weak var currentState: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -31,6 +33,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     func centralManagerDidUpdateState(central: CBCentralManager) {
         if (central.state == CBCentralManagerState.PoweredOn) {
             self.centralManager?.scanForPeripheralsWithServices(nil, options: nil)
+            self.currentState.text = "Scanning"
         } else {
             print("device isn't on")
         }
@@ -39,12 +42,11 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
         peripherals.append(peripheral)
         if (peripheral.name != nil && peripheral.name! == "Nordic_UART"){
+            print("found Nordic_UART")
             self.peripheral = peripheral
             self.centralManager.connectPeripheral(self.peripheral, options: [CBConnectPeripheralOptionNotifyOnDisconnectionKey : true])
         }
     }
-    
-// new after here
     
     func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
         peripheral.readRSSI()
@@ -52,6 +54,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         peripheral.delegate = self
         peripheral.discoverServices(nil)
         print("connected to \(peripheral)")
+        self.currentState.text = "Connected"
     }
     
     func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?){
@@ -61,6 +64,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             self.peripheral = nil
         }
         print("did disconnect")
+        self.currentState.text = "Disconnected"
     }
     
     func stopScan(){
