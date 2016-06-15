@@ -30,10 +30,8 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
 
     func centralManagerDidUpdateState(central: CBCentralManager) {
         if (central.state == CBCentralManagerState.PoweredOn) {
-            //this can be changed to have <#T##serviceUUIDs: [CBUUID]?##[CBUUID]?#>, options: <#T##[String : AnyObject]?#>
             self.centralManager?.scanForPeripheralsWithServices(nil, options: nil)
         } else {
-            //alert that it isn't on
             print("device isn't on")
         }
     }
@@ -44,11 +42,6 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             self.peripheral = peripheral
             self.centralManager.connectPeripheral(self.peripheral, options: [CBConnectPeripheralOptionNotifyOnDisconnectionKey : true])
         }
-//        if (peripheral.name != nil && peripheral.name! == "Nordic_UART"){
-//            peripheralObjects.append([peripheral.name!, RSSI])
-//        }
-//        print("these are the peripherals", peripheralObjects)
-//        print("This is the RSSI", RSSI)
     }
     
 // new after here
@@ -58,6 +51,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         self.startReadRSSI()
         peripheral.delegate = self
         peripheral.discoverServices(nil)
+        print("connected to \(peripheral)")
     }
     
     func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?){
@@ -66,6 +60,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             self.peripheral.delegate = nil
             self.peripheral = nil
         }
+        print("did disconnect")
     }
     
     func stopScan(){
