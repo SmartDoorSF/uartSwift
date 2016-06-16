@@ -16,13 +16,16 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     var peripheralObjects = [AnyObject]()
     var readRSSITimer: NSTimer!
     var peripheral: CBPeripheral!
+    var RSSIholder: NSNumber = 0
     
     @IBOutlet weak var currentState: UILabel!
+    @IBOutlet weak var currentRSSI: UILabel!
+    @IBOutlet weak var message: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        centralManager = CBCentralManager(delegate: self, queue: dispatch_get_main_queue())
+        self.startManager()
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,7 +57,8 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         peripheral.delegate = self
         peripheral.discoverServices(nil)
         print("connected to \(peripheral)")
-        self.currentState.text = "Connected"
+        self.currentState.text = "Connected to \(peripheral.name!)"
+        self.stopScan()
     }
     
     func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?){
@@ -65,15 +69,21 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         }
         print("did disconnect", error)
         self.currentState.text = "Disconnected"
-        self.stopScan()
+        self.startManager()
     }
     
     func stopScan(){
         self.centralManager.stopScan()
     }
     
+    func startManager(){
+        centralManager = CBCentralManager(delegate: self, queue: dispatch_get_main_queue())
+    }
+    
     func peripheral(peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: NSError?) {
-        print("RSSI = \(RSSI)")
+        self.RSSIholder = Int(RSSI)
+        print("RSSI = \(self.RSSIholder)")
+        self.currentRSSI.text = String(RSSI)
     }
     
     func readRSSI(){
@@ -96,6 +106,14 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         if (self.readRSSITimer != nil){
             self.readRSSITimer.invalidate()
             self.readRSSITimer = nil
+        }
+    }
+    
+    func writeValue(data: NSData, forCharacteristic characteristic: CBCharacteristic, type: CBCharacteristicWriteType, error: NSError?) {
+        if error != nil {
+            print("error from writing", error)
+        } else if (Int(RSSIholder) > -70) {
+            self.message.text = "Sent 1"
         }
     }
     
