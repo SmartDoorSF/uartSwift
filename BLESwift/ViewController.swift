@@ -63,8 +63,9 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             self.peripheral.delegate = nil
             self.peripheral = nil
         }
-        print("did disconnect")
+        print("did disconnect", error)
         self.currentState.text = "Disconnected"
+        self.stopScan()
     }
     
     func stopScan(){
