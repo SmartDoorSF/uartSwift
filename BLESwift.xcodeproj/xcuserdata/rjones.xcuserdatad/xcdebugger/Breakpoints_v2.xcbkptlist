@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BLESwift/ViewController.swift"
-            timestampString = "488050395.483767"
+            timestampString = "488051346.165714"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
             landmarkName = "peripheral(_:didWriteValueForCharacteristic:error:)"
             landmarkType = "5">
          </BreakpointContent>

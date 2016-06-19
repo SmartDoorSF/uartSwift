@@ -19,6 +19,8 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     var RSSIholder: NSNumber = 0
     var inputValue: Int = 2
     let txCharacteristic = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
+    var currentCharacteristic: CBCharacteristic! = nil
+    var status: String = "closed"
     
     @IBOutlet weak var currentState: UILabel!
     @IBOutlet weak var currentRSSI: UILabel!
@@ -90,15 +92,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         for characteristic in service.characteristics! {
             let thisCharacteristic = characteristic as CBCharacteristic
             if thisCharacteristic.UUID == txCharacteristic{
-                if (Int(self.RSSIholder) > -70) {
-                    let openValue = "1".dataUsingEncoding(NSUTF8StringEncoding)!
-                    print("value \(openValue)")
-                    self.peripheral.writeValue(openValue, forCharacteristic: thisCharacteristic, type: CBCharacteristicWriteType.WithResponse)
-                } else if (Int(self.RSSIholder) < -80){
-                    let closeValue = "2".dataUsingEncoding(NSUTF8StringEncoding)!
-                    print("value \(closeValue)")
-                    self.peripheral.writeValue(closeValue, forCharacteristic: thisCharacteristic, type: CBCharacteristicWriteType.WithResponse)
-                }
+                self.currentCharacteristic = thisCharacteristic
             }
         }
         if let error = error {
@@ -135,11 +129,25 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         } else {
             print("peripheral = nil")
         }
+        if (Int(self.RSSIholder) > -70 && self.status == "closed") {
+            let openValue = "1".dataUsingEncoding(NSUTF8StringEncoding)!
+            print("value \(openValue)")
+            self.peripheral.writeValue(openValue, forCharacteristic: self.currentCharacteristic, type: CBCharacteristicWriteType.WithResponse)
+            self.status = "open"
+            self.message.text = "message: open"
+        } else if (Int(self.RSSIholder) < -80 && self.status == "open"){
+            let closeValue = "2".dataUsingEncoding(NSUTF8StringEncoding)!
+            print("value \(closeValue)")
+            self.peripheral.writeValue(closeValue, forCharacteristic: self.currentCharacteristic, type: CBCharacteristicWriteType.WithResponse)
+            self.status = "closed"
+            self.message.text = "message: close"
+        }
+
     }
     
     func startReadRSSI() {
         if self.readRSSITimer == nil {
-            self.readRSSITimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.readRSSI), userInfo: nil, repeats: true)
+            self.readRSSITimer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(self.readRSSI), userInfo: nil, repeats: true)
         }
     }
     
