@@ -18,6 +18,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     var peripheral: CBPeripheral!
     var RSSIholder: NSNumber = 0
     var inputValue: Int = 2
+    let txCharacteristic = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
     
     @IBOutlet weak var currentState: UILabel!
     @IBOutlet weak var currentRSSI: UILabel!
@@ -70,6 +71,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         }
         print("did disconnect", error)
         self.currentState.text = "Disconnected"
+        self.currentRSSI.text = "0"
         self.startManager()
     }
     
@@ -78,20 +80,28 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     }
     
     func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?){
-//        print("services \(peripheral.services![0])")
+//        print("services \(peripheral.services)")
         peripheral.discoverCharacteristics(nil, forService: peripheral.services![0])
     }
     
 
     func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?){
-        print("characteristics \(service.characteristics![0])")
-        if (Int(self.RSSIholder) > -70) {
-            let changedValue = "1".dataUsingEncoding(NSUTF8StringEncoding)!
-            print("value \(changedValue)")
-            peripheral.writeValue(changedValue, forCharacteristic: service.characteristics![0], type: CBCharacteristicWriteType.WithResponse)
-        } else if (Int(self.RSSIholder) < -80){
-            self.inputValue = 2
-        } else if let error = error {
+        print("characteristics \(service.characteristics)")
+        for characteristic in service.characteristics! {
+            let thisCharacteristic = characteristic as CBCharacteristic
+            if thisCharacteristic.UUID == txCharacteristic{
+                if (Int(self.RSSIholder) > -70) {
+                    let openValue = "1".dataUsingEncoding(NSUTF8StringEncoding)!
+                    print("value \(openValue)")
+                    self.peripheral.writeValue(openValue, forCharacteristic: thisCharacteristic, type: CBCharacteristicWriteType.WithResponse)
+                } else if (Int(self.RSSIholder) < -80){
+                    let closeValue = "2".dataUsingEncoding(NSUTF8StringEncoding)!
+                    print("value \(closeValue)")
+                    self.peripheral.writeValue(closeValue, forCharacteristic: thisCharacteristic, type: CBCharacteristicWriteType.WithResponse)
+                }
+            }
+        }
+        if let error = error {
             print("characteristics error", error)
         }
     }
