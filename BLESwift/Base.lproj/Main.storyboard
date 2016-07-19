@@ -35,13 +35,37 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lWv-Qn-295">
+                                <rect key="frame" x="52" y="328" width="38" height="30"/>
+                                <state key="normal" title="Open"/>
+                                <connections>
+                                    <action selector="openLock:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qau-Tr-pYK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cCU-VV-0WL">
+                                <rect key="frame" x="182" y="328" width="39" height="30"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeLock:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hqZ-sB-j56"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IFm-l3-Q01">
+                                <rect key="frame" x="118" y="385" width="32" height="30"/>
+                                <state key="normal" title="Auto"/>
+                                <connections>
+                                    <action selector="autoOpen:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gzS-yC-mTK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="autoLock1" destination="IFm-l3-Q01" id="D5b-bd-wat"/>
+                        <outlet property="closeLock1" destination="cCU-VV-0WL" id="k8n-Cu-7ql"/>
                         <outlet property="currentRSSI" destination="a4E-xy-PAB" id="3pg-ct-aqL"/>
                         <outlet property="currentState" destination="HVi-ON-mzN" id="UrM-fK-ze0"/>
                         <outlet property="message" destination="YEM-np-7VQ" id="UxJ-DZ-sBS"/>
+                        <outlet property="openLock1" destination="lWv-Qn-295" id="Wn2-gR-Ntp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -21,15 +21,22 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     let txCharacteristic = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
     var currentCharacteristic: CBCharacteristic! = nil
     var status: String = "closed"
+    var autoStatus: String = "on"
     
     @IBOutlet weak var currentState: UILabel!
     @IBOutlet weak var currentRSSI: UILabel!
     @IBOutlet weak var message: UILabel!
+    @IBOutlet weak var openLock1: UIButton!
+    @IBOutlet weak var closeLock1: UIButton!
+    @IBOutlet weak var autoLock1: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.startManager()
+        openLock1.enabled = false
+        closeLock1.enabled = false
+        autoLock1.enabled = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,6 +59,8 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             print("found Nordic_UART")
             self.peripheral = peripheral
             self.centralManager.connectPeripheral(self.peripheral, options: [CBConnectPeripheralOptionNotifyOnDisconnectionKey : true])
+            self.openLock1.enabled = true
+            self.closeLock1.enabled = true
         }
     }
     
@@ -74,6 +83,9 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         print("did disconnect", error)
         self.currentState.text = "Disconnected"
         self.currentRSSI.text = "0"
+        self.openLock1.enabled = false
+        self.closeLock1.enabled = false
+        self.autoLock1.enabled = false
         self.startManager()
     }
     
@@ -129,13 +141,13 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         } else {
             print("peripheral = nil")
         }
-        if (Int(self.RSSIholder) > -70 && self.status == "closed") {
+        if (Int(self.RSSIholder) > -70 && self.status == "closed" && self.autoStatus == "on") {
             let openValue = "1".dataUsingEncoding(NSUTF8StringEncoding)!
             print("value \(openValue)")
             self.peripheral.writeValue(openValue, forCharacteristic: self.currentCharacteristic, type: CBCharacteristicWriteType.WithResponse)
             self.status = "open"
             self.message.text = "message: open"
-        } else if (Int(self.RSSIholder) < -80 && self.status == "open"){
+        } else if (Int(self.RSSIholder) < -80 && self.status == "open" && self.autoStatus == "on"){
             let closeValue = "2".dataUsingEncoding(NSUTF8StringEncoding)!
             print("value \(closeValue)")
             self.peripheral.writeValue(closeValue, forCharacteristic: self.currentCharacteristic, type: CBCharacteristicWriteType.WithResponse)
@@ -143,6 +155,31 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
             self.message.text = "message: close"
         }
 
+    }
+
+    @IBAction func openLock(sender: UIButton) {
+        let openValue = "1".dataUsingEncoding(NSUTF8StringEncoding)!
+        print("value \(openValue)")
+        self.peripheral.writeValue(openValue, forCharacteristic: self.currentCharacteristic, type: CBCharacteristicWriteType.WithResponse)
+        self.autoStatus = "off"
+        self.status = "open"
+        self.message.text = "message: open"
+        self.autoLock1.enabled = true
+    }
+    
+    @IBAction func closeLock(sender: UIButton) {
+        let closeValue = "2".dataUsingEncoding(NSUTF8StringEncoding)!
+        print("value \(closeValue)")
+        self.peripheral.writeValue(closeValue, forCharacteristic: self.currentCharacteristic, type: CBCharacteristicWriteType.WithResponse)
+        self.autoStatus = "off"
+        self.status = "closed"
+        self.message.text = "message: close"
+        self.autoLock1.enabled = true
+    }
+    
+    @IBAction func autoOpen(sender: UIButton) {
+        self.autoStatus = "on"
+        self.autoLock1.enabled = false
     }
     
     func startReadRSSI() {
